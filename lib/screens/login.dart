@@ -22,54 +22,109 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          SizedBox(height: 80.0,),
-          TextField(
-            controller: EmailEditController,
-            decoration: InputDecoration(
-                hintText: "Email",
-                hintStyle:
-                TextStyle(fontWeight: FontWeight.w300, color: Colors.red)),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Form(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  height: 20,
+                ),
+                Text(
+                  "LOGIN",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25.0),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(right: 40.0, left: 40.0),
+                  child: TextFormField(
+                    controller : EmailEditController,
+                    keyboardType: TextInputType.emailAddress,
+                    decoration: InputDecoration(
+                        icon: Icon(Icons.person),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30.0),
+                            borderSide: BorderSide.none),
+                        filled: true,
+                        hintStyle: TextStyle(color: Colors.grey[800]),
+                        hintText: "Email",
+                        fillColor: Colors.green.shade100),
+                  ),
+                ),
+                SizedBox(
+                  height: 10.0,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(right: 40.0, left: 40.0, top: 20.0),
+                  child: TextFormField(
+                    controller: PaswordEditController,
+                    obscureText: true,
+                    decoration: InputDecoration(
+                        icon: Icon(Icons.lock),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30.0),
+                            borderSide: BorderSide.none),
+                        filled: true,
+                        hintStyle: TextStyle(color: Colors.grey[800]),
+                        hintText: "Password",
+                        fillColor: Colors.green.shade100),
+                  ),
+                ),
+
+                SizedBox(
+                  height: 40,
+                ),
+                ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      elevation: 6.0,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30)),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                          top: 12.0, bottom: 12.0, right: 35.0, left: 35.0),
+                      child: Text(
+                        "Log In",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 25.0,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    onPressed: ()async {
+
+                      LoginModel? user = await LoginMethod(
+                        EmailEditController.text.toString().trim(), PaswordEditController.text.toString().trim(),);
+
+
+                      if(user != null){
+
+                        saveTokenToSP(user.token);
+                        ToastMsg(
+                          Colors.blue,
+                          "WellCOme",
+                        );
+                        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
+                            groceryMain(user)), (Route<dynamic> route) => false);
+
+                      }
+                    }),
+
+
+                SizedBox(height: 30.0,),
+                GestureDetector(
+                    onTap: (){
+                      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
+                          SignUpScreen()), (Route<dynamic> route) => false);
+                    },
+                    child: Text("Not register Yet?"))
+              ],
+            ),
           ),
-          TextField(
-            controller: PaswordEditController,
-            decoration: InputDecoration(
-                hintText: "Password",
-                hintStyle:
-                TextStyle(fontWeight: FontWeight.w300, color: Colors.red)),
-          ),
-
-          FlatButton(
-            onPressed: ()async {
-
-
-              LoginModel? user = await LoginMethod(
-                EmailEditController.text.toString().trim(), PaswordEditController.text.toString().trim(),);
-
-
-              if(user != null){
-
-                saveTokenToSP(user.token);
-                ToastMsg(
-                  Colors.blue,
-                  "WellCOme",
-                );
-                Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
-                    groceryMain(user)), (Route<dynamic> route) => false);
-
-              }
-            },
-            child: Text("Login"),
-          ),
-          SizedBox(height: 30.0,),
-          GestureDetector(
-              onTap: (){
-                Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
-                    SignUpScreen()), (Route<dynamic> route) => false);
-              },
-              child: Text("Not register Yet?"))
-        ],
+        ),
       ),
     );
   }

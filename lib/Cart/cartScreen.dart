@@ -638,6 +638,8 @@ void deleteFunction(Todo item){
       child: Text("OK"),
       onPressed: () {
 
+        Navigator.of(context).pop();
+
         // Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
         //   groceryMain()), (Route<dynamic> route) => false);
         },
